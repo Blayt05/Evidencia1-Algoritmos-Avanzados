@@ -39,6 +39,7 @@ def KMPSearch(pat, txt, nombre):
             j += 1
         if j == M:
             print("El inicio del genoma ", nombre," es", i - j)
+            print(txt[i-j:i-j + 12]) #Se imprimen los primeros 12 nucleotidos del patron encontrado
             j = lps[j-1]
         elif i < N and txt[i] != pat[j]:
             if j != 0:
