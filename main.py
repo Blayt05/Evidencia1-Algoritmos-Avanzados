@@ -11,7 +11,7 @@ def leer_archivo(ruta):
 
 #Funcion que nos ayuda a formatear de manear correcta el nombre de la proteinas y su secuencia en aminoacidos
 def leer_archivo_proteina(ruta):
-    diccionario_proteina = {}
+    lista_proteinas = []
     secuencia_actual = ""
     with open(ruta, "r", encoding="utf-8") as f: #Se abre el archivo fasta y se cierra con with
         for line in f: #Para cada linea del archivo 
@@ -19,8 +19,12 @@ def leer_archivo_proteina(ruta):
                 nombre_actual = line[1:].strip()  # Se toma el nombre
             else:
                 secuencia_actual = line.strip()# Se quitan saltos de línea y espacios
-                diccionario_proteina[nombre_actual] = secuencia_actual
-    return diccionario_proteina # Se unen todos los arreglos en uno solo sin espacios
+                diccionario_proteina = {
+                    "nombre": nombre_actual,
+                    "secuencia": secuencia_actual
+                }
+                lista_proteinas.append(diccionario_proteina)
+    return lista_proteinas # Se unen todos los arreglos en uno solo sin espacios
 
 def computeLPSArray(pat, M, lps):
     len = 0
@@ -60,7 +64,93 @@ def KMPSearch(pat, txt, nombre):
             else:
                 i += 1
             
+
+def frames(genoma):
+    proteinas = []
+    #Frame 0 de 3 en 3
+    estado = "fuera"
+    secuencia = ""
+    inicio = -1
+    for i in range(0, len(genoma), 3):
+        codon_actual = genoma[i:i+3]
+        
+        if estado == "fuera":
+            if codon_actual == "ATG":
+                inicio = i
+                estado = "dentro"
+                secuencia = "M"
+
+        if estado == "dentro":
+            if codon_actual == "TAA" or codon_actual == "TGA" or codon_actual == "TAG":
+                final = i
+                proteinas.append({"inicio": inicio,
+                                  "final": final,
+                                  "frame": 0,
+                                  "secuencia": secuencia
+                                })
                 
+                estado = "fuera"
+            else:
+                if codon_actual in codones:
+                    secuencia = secuencia + codones[codon_actual]
+
+    #Frame 1 de 3 en 3
+    estado = "fuera"
+    secuencia = ""
+    inicio = -1
+    for i in range(1, len(genoma), 3):
+        codon_actual = genoma[i:i+3]
+        
+        if estado == "fuera":
+            if codon_actual == "ATG":
+                inicio = i
+                estado = "dentro"
+                secuencia = "M"
+
+        if estado == "dentro":
+            if codon_actual == "TAA" or codon_actual == "TGA" or codon_actual == "TAG":
+                final = i
+                proteinas.append({"inicio": inicio,
+                                "final": final,
+                                "frame": 1,
+                                "secuencia": secuencia
+                                })
+                
+                estado = "fuera"
+            else:
+                if codon_actual in codones:
+                    secuencia = secuencia + codones[codon_actual]
+
+    #Frame 2 de 3 en 3
+    estado = "fuera"
+    secuencia = ""
+    inicio = -1
+    for i in range(2, len(genoma), 3):
+        codon_actual = genoma[i:i+3]
+        
+        if estado == "fuera":
+            if codon_actual == "ATG":
+                inicio = i
+                estado = "dentro"
+                secuencia = "M"
+
+        if estado == "dentro":
+            if codon_actual == "TAA" or codon_actual == "TGA" or codon_actual == "TAG":
+                final = i
+                proteinas.append({"inicio": inicio,
+                                "final": final,
+                                "frame": 2,
+                                "secuencia": secuencia
+                                })
+                
+                estado = "fuera"
+            else:
+                if codon_actual in codones:
+                    secuencia = secuencia + codones[codon_actual]
+    return proteinas
+
+
+
 
         
 
@@ -69,16 +159,15 @@ def KMPSearch(pat, txt, nombre):
 genoma = leer_archivo("archivos/SARS-COV-2-MN908947.3.txt") # Archivo del genoma completo
 
 #Estos serian los patrones
-# genM   = leer_archivo("archivos/gen-M.txt") # el gen M  
-# genS   = leer_archivo("archivos\gen-S.txt") # el gen S
-# genORF = leer_archivo("archivos\gen-ORF1AB.txt") # el gen ORF1ab
-# nombre = "genM"
-# nombre2 = "genS"
-# nombre3 = "genORF"
-# KMPSearch(genM,genoma, nombre)
-# KMPSearch(genS,genoma,nombre2)
-# KMPSearch(genORF,genoma,nombre3)
-
+genM   = leer_archivo("archivos/gen-M.txt") # el gen M  
+genS   = leer_archivo("archivos/gen-S.txt") # el gen S
+genORF = leer_archivo("archivos/gen-ORF1AB.txt") # el gen ORF1ab
+nombre = "genM"
+nombre2 = "genS"
+nombre3 = "genORF"
+KMPSearch(genM,genoma, nombre)
+KMPSearch(genS,genoma,nombre2)
+KMPSearch(genORF,genoma,nombre3)
 
 #Tabla de aminoacidos, aqui vemos las equivalencias de tripletes de nucleotidos a aminoacidos
 codones = {
@@ -148,9 +237,30 @@ codones = {
     "TAG": "STOP"
 }
 
+resultado = frames(genoma)
+# for prot in resultado:
+#     print("Inicio", prot["inicio"])
+#     print("Final", prot["final"])
+#     print("Secuencia", prot["secuencia"])
+#     print("Frame", prot["frame"])
+
 proteinas = leer_archivo_proteina("archivos/seq-proteins.txt")
-print(proteinas)
+
+for prot_res in resultado:
+    for prot_ref in proteinas:
+        if prot_res["secuencia"] == prot_ref["secuencia"]:
+            print("Si hay coincidencia")
+            print(prot_ref["nombre"])
+            print(prot_res["frame"])
+            print(prot_res["inicio"])
+            print(prot_res["final"])
+            print(prot_res["secuencia"])
+
+
+# print(proteinas)
 # print(genoma)
+
+
 
 
 
