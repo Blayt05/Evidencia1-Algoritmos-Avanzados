@@ -150,8 +150,35 @@ codones = {
 
 proteinas = leer_archivo_proteina("archivos/seq-proteins.txt")
 print(proteinas)
-# print(genoma)
+
+from algorithms import Algorithms
+from pathlib import Path
+from utils import Utils , FileUtils         
 
 
+def run_for_file(label: str, path: Path) -> None:
+    try:
+        gf = FileUtils(label, str(path))        
+        gf.path = str(path)       
+        seq = gf.read_file()
+        longest = Algorithms.mancher_algorithm(seq)
+        print(f"\n[{label}] {path.name}")
+        print(f"- Seq length: {len(seq)}")
+        print(f"- Longest palindrome length: {len(longest)}")
+        print(f"- Longest palindrome: {longest}")
+    except Exception as e:
+        print(f"\n[{label}] {path.name} -> ERROR: {e}")
+
+
+if __name__ == "__main__":
+    base = Path(__file__).parent  
+    files = {
+        "Gen M": base / "archivos/gen-M.txt",
+        "Gen ORF1ab": base / "archivos/gen-ORF1AB.txt",
+        "Gen S": base / "archivos/gen-S.txt",
+    }
+
+    for label, fpath in files.items():
+        run_for_file(label, fpath)
 
 
