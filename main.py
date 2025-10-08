@@ -123,6 +123,8 @@ def frames(genoma):
     #Al terminar todos los frames se retorna el arreglo
     return proteinas_genoma
 
+
+
 #******************************************************************************************
 #--- Nos sirve para inicializar y mandar a llamar a todas nuestras funciones y archivos --- 
 #******************************************************************************************
@@ -202,70 +204,20 @@ print("---------------------- Comienzo problema 3 ----------------------")
 print("********************************************************************")
 #Tabla de aminoacidos, aqui vemos las equivalencias de tripletes de nucleotidos a aminoacidos
 codones = {
-    "ATG": "M",
-    "GCT": "A",
-    "GCC": "A",
-    "GCA": "A",
-    "GCG": "A",
-    "CGT": "R",
-    "CGC": "R",
-    "CGA": "R",
-    "CGG": "R",
-    "AGA": "R",
-    "AGG": "R",
-    "AAT": "N",
-    "AAC": "N",
-    "GAT": "D",
-    "GAC": "D",
-    "TGT": "C",
-    "TGC": "C",
-    "CAA": "Q",
-    "CAG": "Q",
-    "GAA": "E",
-    "GAG": "E",
-    "GGT": "G",
-    "GGC": "G",
-    "GGA": "G",
-    "GGG": "G",
-    "CAT": "H",
-    "CAC": "H",
-    "ATT": "I",
-    "ATC": "I",
-    "ATA": "I",
-    "CTT": "L",
-    "CTC": "L",
-    "CTA": "L",
-    "CTG": "L",
-    "TTA": "L",
-    "TTG": "L",
-    "AAA": "K",
-    "AAG": "K",
-    "TTT": "F",
-    "TTC": "F",
-    "CCT": "P",
-    "CCC": "P",
-    "CCA": "P",
-    "CCG": "P",
-    "TCT": "S",
-    "TCC": "S",
-    "TCA": "S",
-    "TCG": "S",
-    "AGT": "S",
-    "AGC": "S",
-    "ACT": "T",
-    "ACC": "T",
-    "ACA": "T",
-    "ACG": "T",
-    "TGG": "W",
-    "TAT": "Y",
-    "TAC": "Y",
-    "GTT": "V",
-    "GTC": "V",
-    "GTA": "V",
-    "GTG": "V",
-    "TAA": "*",
-    "TGA": "*",
-    "TAG": "*"
+    "ATG": "M", "GCT": "A", "GCC": "A", "GCA": "A", "GCG": "A",
+    "CGT": "R", "CGC": "R", "CGA": "R", "CGG": "R", "AGA": "R", "AGG": "R",
+    "AAT": "N", "AAC": "N", "GAT": "D", "GAC": "D",
+    "TGT": "C", "TGC": "C", "CAA": "Q", "CAG": "Q",
+    "GAA": "E", "GAG": "E", "GGT": "G", "GGC": "G", "GGA": "G", "GGG": "G",
+    "CAT": "H", "CAC": "H", "ATT": "I", "ATC": "I", "ATA": "I",
+    "CTT": "L", "CTC": "L", "CTA": "L", "CTG": "L", "TTA": "L", "TTG": "L",
+    "AAA": "K", "AAG": "K", "TTT": "F", "TTC": "F",
+    "CCT": "P", "CCC": "P", "CCA": "P", "CCG": "P",
+    "TCT": "S", "TCC": "S", "TCA": "S", "TCG": "S", "AGT": "S", "AGC": "S",
+    "ACT": "T", "ACC": "T", "ACA": "T", "ACG": "T",
+    "TGG": "W", "TAT": "Y", "TAC": "Y",
+    "GTT": "V", "GTC": "V", "GTA": "V", "GTG": "V",
+    "TAA": "*", "TGA": "*", "TAG": "*"
 }
 
 resultado = frames(genoma)
@@ -286,6 +238,12 @@ for frame, prot_res in enumerate(resultado):
         else:
             pass
             # print("No se encontro la proteina con el nombre: ", nombre)
+
+#Llamada slippery sequence
+# slippery_seq = "TTTAAAC"
+# shift = +1
+# proteinas_afectada
+# print()
 
 #********************************************************************
 #---------------------- LLamadas a problema 4 ----------------------
