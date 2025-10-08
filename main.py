@@ -40,18 +40,23 @@ def leer_archivo_proteina(ruta):
 #*****************************************************************
 
 def computeLPSArray(pat, M, lps):
+    #Se inicializo la variable que guarda la longitud del prefijo mas largo
     len = 0
     i = 1
-    lps[0] = 0
+    lps[0] = 0 #El primero elemento siempre empieza en 0
+    #Se recorre el patron para calcular el arreglo lps
     while i < M:
         if pat[i] == pat[len]:
+            #Si hay coincidencias entonces aumento la longitud y guardo el valor en el lps
             lps[i] = len + 1
             len += 1
             i += 1
         else:
             if len != 0:
+                #Si no hay coincidencia y len no es cero, se actualiza len usando el valor anteirior del lps
                 len = lps[len - 1]
             else:
+                #Si len es cero entonces pongo cero en el lps y sigo avanzando
                 lps[i] = 0
                 i += 1 
 
@@ -59,26 +64,35 @@ def computeLPSArray(pat, M, lps):
 #--- Nos sirve para utilizar el algoritmo de string matching KMP --- 
 #********************************************************************
 def KMPSearch(pat, txt, nombre):
-    N = len(txt)
+    #Se guarda la longitud del texto en N
+    N = len(txt) 
+    #Se guarda la longitud del patron
     M = len(pat)
+    #Se crea un lps del tamaño del patron
     lps = [0]*M
+    #Se consigue el lps
     computeLPSArray(pat, M, lps)
+    #Indice que nos sirve para el texto
     i = 0
+    #Indice que nos sirve para el patron
     j = 0
+    #Se recorre el texto buscando el patron
     while i < N:
         if txt[i] == pat[j]:
+            #Si hay coincidencia se avanza al siguiente caracter en ambos indices
             i += 1
             j += 1
         if j == M:
+            #Si se encuentra la misma longitud de j que la del patron entonces se retorna el indice inicio, final, secuencia y nombre
             return i-j, i-1, txt[i-j:i-j + 12], nombre
-            # print("El inicio del genoma ", nombre," es", i - j)
-            # print(txt[i-j:i-j + 12]) #Se imprimen los primeros 12 nucleotidos del patron encontrado
-            # j = lps[j-1]
         elif i < N and txt[i] != pat[j]:
             if j != 0:
+                #Si hay un error y j no es cero, se actualiza j usando el lps
                 j = lps[j-1]
             else:
+                #Si j es cero, solo se avanza en el texto
                 i += 1
+    #Si no se encontro el patron, se regresa -1 por seguridad
     return -1, -1, -1, nombre
 
 #**************************************************************************
@@ -86,18 +100,27 @@ def KMPSearch(pat, txt, nombre):
 #**************************************************************************   
 
 def frames(genoma):
+    #Arreglo que nos sirve para guardar las 3 secuencias del genoma traducido en los diferentes tipos de marcos
     proteinas_genoma = []
-    #Los 3 frames disponibles
+    #Se almacena la secuencia de cada frame aqui
     secuencia=""
+    #Los 3 diferentes de frames se representan con un for
     for frame in range(3):
+        #Se va desde el indice 0 al fin del genoma en pasos de 3
         for i in range(frame, len(genoma), 3):
+            #El codon actual seria conformado por 3 nucleotidos
             codon_actual = genoma[i:i+3]
+            #Si el codon es menor a 3 entonces se rompe el ciclo ahi, esto se hace por irregularidades que los marcos provoquen
             if len(codon_actual) < 3:
                 break
+            #Si no entonces se siguen añadiendo codones a la secuencia 
             else:
                 secuencia = secuencia + codones[codon_actual]
+        #Una vez se termina un frame se agrega al arreglo y se continua con el siguiente frame
         proteinas_genoma.append(secuencia)
+        #Se limpia la secuencia
         secuencia = ""
+    #Al terminar todos los frames se retorna el arreglo
     return proteinas_genoma
 
 #******************************************************************************************
@@ -270,6 +293,7 @@ for frame, prot_res in enumerate(resultado):
 print("********************************************************************")
 print("---------------------- Comienzo a problema 4 ----------------------")
 print("********************************************************************")
+
 
 
 
