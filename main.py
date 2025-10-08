@@ -108,26 +108,75 @@ def frames(genoma):
 #---------------------- LLamadas a problema 1 ----------------------
 #********************************************************************
 
+print("********************************************************************")
+print("---------------------- Comienzo a problema 1 ----------------------")
+print("********************************************************************")
 # -------- Archivos de prueba -----------
 # #Este seria el texto 
-# genoma = leer_archivo("archivos/SARS-COV-2-MN908947.3.txt") # Archivo del genoma completo
+genoma = leer_archivo("archivos/SARS-COV-2-MN908947.3.txt") # Archivo del genoma completo
 
 # #Estos serian los patrones
-# genM   = leer_archivo("archivos/gen-M.txt") # el gen M  
-# genS   = leer_archivo("archivos/gen-S.txt") # el gen S
-# genORF = leer_archivo("archivos/gen-ORF1AB.txt") # el gen ORF1ab
-# nombre = "genM"
-# nombre2 = "genS"
-# nombre3 = "genORF"
-# KMPSearch(genM,genoma, nombre)
-# KMPSearch(genS,genoma,nombre2)
-# KMPSearch(genORF,genoma,nombre3)
+genes = [
+    (leer_archivo("archivos/gen-M.txt"), "genM"),
+    (leer_archivo("archivos/gen-S.txt"), "genS"),
+    (leer_archivo("archivos/gen-ORF1AB.txt"), "genORF")
+]
+
+for gen, nombre in genes:
+    
+    inicio, final, secuencia, nombre = KMPSearch(gen,genoma,nombre)
+
+    print("El nombre del gen es: ", nombre)
+    print("El inicio es:", inicio)
+    print("El final es:", final)
+    print("El inicio es:", secuencia)
 
 
 #********************************************************************
 #---------------------- LLamadas a problema 2 ----------------------
 #********************************************************************
 
+print("********************************************************************")
+print("---------------------- Comienzo a problema 2 ----------------------")
+print("********************************************************************")
+from algorithms import Algorithms
+from pathlib import Path
+from utils import Utils , FileUtils         
+
+
+def run_for_file(label: str, path: Path) -> None:
+    try:
+        gf = FileUtils(label, str(path))        
+        gf.path = str(path)       
+        seq = gf.read_file()
+        longest = Algorithms.mancher_algorithm(seq)
+        print(f"\n[{label}] {path.name}")
+        print(f"- Longitud de la secuencia: {len(seq)}")
+        print(f"- Longitud del palindromo mas largo: {len(longest)}")
+        print(f"- Palindromo mas largo: {longest}")
+    except Exception as e:
+        print(f"\n[{label}] {path.name} -> ERROR: {e}")
+
+
+if __name__ == "__main__":
+    base = Path(__file__).parent  
+    files = {
+        "Gen M": base / "archivos/gen-M.txt",
+        "Gen ORF1ab": base / "archivos/gen-ORF1AB.txt",
+        "Gen S": base / "archivos/gen-S.txt",
+    }
+
+    for label, fpath in files.items():
+        run_for_file(label, fpath)
+
+
+#********************************************************************
+#---------------------- LLamadas a problema 3 ----------------------
+#********************************************************************
+
+print("********************************************************************")
+print("---------------------- Comienzo problema 3 ----------------------")
+print("********************************************************************")
 #Tabla de aminoacidos, aqui vemos las equivalencias de tripletes de nucleotidos a aminoacidos
 codones = {
     "ATG": "M",
@@ -196,30 +245,8 @@ codones = {
     "TAG": "*"
 }
 
-# #Este seria el texto 
-genoma = leer_archivo("archivos/SARS-COV-2-MN908947.3.txt") # Archivo del genoma completo
-
 resultado = frames(genoma)
-i = 0
-# for prot in resultado:
-#     i = i + 1
-#     print(i)
-#     print(prot)
-
-# for prot in resultado:
-#     print("Inicio", prot["inicio"])
-#     print("Final", prot["final"])
-#     print("Secuencia", prot["secuencia"])
-#     print("Frame", prot["frame"])
 proteinas = leer_archivo_proteina("archivos/seq-proteins.txt")
-
-
-# for prot_ref in proteinas:
-#     i = i + 1
-#     print(i)
-#     print(prot_ref["nombre"])
-#     print(prot_ref["secuencia"])
-
 for frame, prot_res in enumerate(resultado):
     for prot_ref in proteinas:
         inicio, final, secuencia, nombre= KMPSearch(prot_ref["secuencia"],prot_res,prot_ref["nombre"])
@@ -234,51 +261,15 @@ for frame, prot_res in enumerate(resultado):
             print("La secuencia de los 4 aminoacidos de la proteina es: ", primeros_4_aminoacidos)
             print("**************************")
         else:
-            print("")
+            pass
             # print("No se encontro la proteina con el nombre: ", nombre)
 
-#         if prot_res["secuencia"] == prot_ref["secuencia"]:
-#             print("Si hay coincidencia")
-#             print(prot_ref["nombre"])
-#             print(prot_res["frame"])
-#             print(prot_res["inicio"])
-#             print(prot_res["final"])
-#             print(prot_res["secuencia"])
+#********************************************************************
+#---------------------- LLamadas a problema 4 ----------------------
+#********************************************************************
+print("********************************************************************")
+print("---------------------- Comienzo a problema 4 ----------------------")
+print("********************************************************************")
 
-
-# print(proteinas)
-# print(genoma)
-
-print(proteinas)
-
-from algorithms import Algorithms
-from pathlib import Path
-from utils import Utils , FileUtils         
-
-
-def run_for_file(label: str, path: Path) -> None:
-    try:
-        gf = FileUtils(label, str(path))        
-        gf.path = str(path)       
-        seq = gf.read_file()
-        longest = Algorithms.mancher_algorithm(seq)
-        print(f"\n[{label}] {path.name}")
-        print(f"- Seq length: {len(seq)}")
-        print(f"- Longest palindrome length: {len(longest)}")
-        print(f"- Longest palindrome: {longest}")
-    except Exception as e:
-        print(f"\n[{label}] {path.name} -> ERROR: {e}")
-
-
-if __name__ == "__main__":
-    base = Path(__file__).parent  
-    files = {
-        "Gen M": base / "archivos/gen-M.txt",
-        "Gen ORF1ab": base / "archivos/gen-ORF1AB.txt",
-        "Gen S": base / "archivos/gen-S.txt",
-    }
-
-    for label, fpath in files.items():
-        run_for_file(label, fpath)
 
 
