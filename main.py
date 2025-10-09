@@ -122,70 +122,6 @@ def frames(genoma):
     #Al terminar todos los frames se retorna el arreglo
     return proteinas_genoma
 
-#**************************************************************************
-#----------- Nos sirve para traducir desde un frame especifico ------------ 
-#**************************************************************************
-def traducir_frame(sequencia,frame):
-    secuencia_traducida = ""
-    for i in range(frame, len(sequencia), 3):
-        codon_actual = sequencia[i:i+3]
-        if len(codon_actual) < 3:
-            break
-        secuencia_traducida += codones[codon_actual]
-    return secuencia_traducida
-
-#**********************************************************************************************
-#----------- Nos sirve para encontrar la proteina afectada por el slippery sequence------------ 
-#***********************************************************************************************
-def encontrar_proteina_slippery_sequence(genoma, slippery_seq, shift=1):
-    
-    #Se busca la posicion del slippery sequence en el genoma de nucleotidos
-    inicio, final, secuencia, nombre = KMPSearch(slippery_seq, genoma, "slippery")
-    if inicio == -1:
-        print("No se encontro slippery sequence en el genoma")
-        return None
-    
-    print("Se encontro el slippery sequence")
-    print("Secuencia encontrada:", slippery_seq)
-    print("Posicion en el genoma:", inicio, " a ",final)
-    print("**************************")
-
-    # Se obtienen los 3 frames completos del genoma
-    frames_proteinas = frames(genoma)
-
-    #Se busca la proteina de referencia que contiene esta region
-    proteinas = leer_archivo_proteina("archivos/seq-proteins.txt")
-
-    for frame_indice, framde_traducido in enumerate(frames_proteinas):
-        for prot_ref in proteinas:
-            inicio_prot, final_prot, secuencia, nombre_prot = KMPSearch(prot_ref["secuencia"], framde_traducido, prot_ref["nombre"])
-
-            if inicio_prot != -1:
-                #Se calculan las posiciones en nucleotidos de la proteina
-                inicio_genoma = inicio_prot * 3 + frame_indice
-                final_genoma = final_prot * 3 + frame_indice
-
-                #Se verifica si el slippery sequence esta dentro de la proteina
-                if inicio_genoma <= inicio <= final_genoma:
-                    #Se obtienen los primero 3 codones y aminoacidos
-                    primeros_4_codones= genoma[inicio_genoma:inicio_genoma + 12]
-                    primeros_4_aminoacidos = prot_ref["secuencia"][:4]
-
-                    print("El nombre de la proteina que contiene el slippery sequence es:", nombre_prot)
-                    print("Los indices en el genoma son:", inicio_genoma, "-", final_genoma)
-                    print("Los primero 4 aminoacidos son", primeros_4_aminoacidos)
-                    print("Los primeros 4 codones son:", primeros_4_codones)
-                    print("********************************************************************************")
-
-                    return {
-                        'nombre': nombre_prot,
-                        'inicio_genoma': inicio_genoma,
-                        'final_genoma': final_genoma,
-                        'primeros_4_aa': primeros_4_aminoacidos,
-                        'primeros_4_co': primeros_4_codones
-                    }
-    print("No se encontro una proteina que contenga slippery sequence")
-    return None
 
 #**************************************************************************
 #------------------- Funciones para el algoritmo de Manacher --------------
@@ -372,12 +308,6 @@ for frame, prot_res in enumerate(resultado):
         else:
             pass
             # print("No se encontro la proteina con el nombre: ", nombre)
-
-#Llamada slippery sequence
-slippery_seq = "TTTAAAC"
-shift = 1
-encontrar_proteina_slippery_sequence(genoma, slippery_seq,shift)
-
 
 # ======== PROBLEMA 4: Wuhan (2019) vs Texas (2020) ==========================
 # ============================================================================
